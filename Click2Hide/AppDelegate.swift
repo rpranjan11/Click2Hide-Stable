@@ -192,9 +192,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             matched.appID.contains($0.localizedName ?? "___") == true
         }) {
             if app.isActive && !app.isHidden {
-                // IT IS ACTIVE -> HIDE IT
-                appDelegate.log("Hiding: \(matched.appID)")
-                app.hide()
+                // IT IS ACTIVE -> MINIMIZE ITS WINDOWS
+                appDelegate.log("Minimizing: \(matched.appID)")
+                appDelegate.minimizeAppWindows(app: app)
                 return nil // Intercept the click
             }
         }
@@ -202,6 +202,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // IN ALL OTHER CASES: Let the macOS Dock handle the click
         // This is 100% reliable for opening/unminimizing apps
         return Unmanaged.passUnretained(event)
+    }
+
+    private func minimizeAppWindows(app: NSRunningApplication) {
+        let appElement = AXUIElementCreateApplication(app.processIdentifier)
+        var windowsRef: CFTypeRef?
+        let result = AXUIElementCopyAttributeValue(appElement, kAXWindowsAttribute as CFString, &windowsRef)
+        
+        if result == .success, let windows = windowsRef as? [AXUIElement] {
+            for window in windows {
+                AXUIElementSetAttributeValue(window, kAXMinimizedAttribute as CFString, kCFBooleanTrue)
+            }
+        } else {
+            // Fallback to hide if window minimization fails (e.g. app has no windows)
+            app.hide()
+        }
     }
 
     private func isActiveAppFullscreen() -> Bool {
