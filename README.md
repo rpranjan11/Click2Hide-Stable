@@ -1,6 +1,5 @@
 # Click2Hide (Stable Fork)
 
-![Click2Hide Logo](Click2Hide/Assets.xcassets/AppIcon.appiconset/128-mac.png)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/rpranjan11/Click2Hide-Stable?color=blue&label=release)](https://github.com/rpranjan11/Click2Hide-Stable/releases)
 
 ## Overview
