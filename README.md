@@ -4,32 +4,38 @@
 
 ## Overview
 
-**Click2Hide (Stable)** is a fork of the original [Click2Hide](https://github.com/victorwon/click2hide) by Victor Won. This version has been specifically refactored and optimized for **macOS Sequoia** to provide a "drama-free" experience.
+**Click2Hide (Stable)** is a high-performance fork of Click2Hide, specifically optimized for **macOS Sequoia**. It provides a reliable way to hide and un-minimize applications by clicking their icons directly in the Dock.
 
-It solves the common "app swapping" and "refusal to open" bugs found in the original version when used with modern macOS Accessibility settings.
+This version implements a **"Minimum Intervention"** strategy—intercepting clicks only to minimize active windows while allowing the macOS Dock to handle all application activation and recovery. This ensures 100% stability and compatibility with native macOS features like the **Genie/Scale effect**.
 
-## Key Improvements in this Fork
+## Key Features
 
-*   **Minimum Intervention Strategy**: Click2Hide now only intercepts clicks to **hide** an active app. It lets the native macOS Dock handle all **show/unminimize** actions, ensuring 100% reliability.
-*   **Universal Matcher**: Automatically identifies Safari, Terminal, and third-party apps by checking localized names, bundle IDs, and executable paths simultaneously.
-*   **WhatsApp Fix**: Full support for the latest WhatsApp Desktop client (`net.whatsapp.WhatsApp`).
-*   **Sequoia Optimized**: Faster response times and improved permission polling.
+*   **Native Animations**: Full support for Genie and Scale effects during minimization.
+*   **Universal Matcher**: Seamlessly works with all apps (Safari, Terminal, Chrome, WhatsApp, etc.) by matching bundle IDs and localized titles.
+*   **Sequoia Optimized**: Fixed the common "app swapping" and "refusal to open" bugs found in the original open-source version.
+*   **Lightweight**: Minimal CPU/Memory footprint.
 
-## Installation
+## Installation & Security
 
-1. Clone this repository or download the source.
-2. Build using Xcode: `xcodebuild -project Click2Hide.xcodeproj -scheme Click2Hide -configuration Release build`.
-3. Move the resulting `Click2Hide.app` to your Applications folder.
-4. **Grant Permissions**: Open **System Settings > Privacy & Security > Accessibility** and add Click2Hide.
+To install Click2Hide on your Mac:
+
+1.  **Download**: Get the latest version from the **[Releases](https://github.com/rpranjan11/Click2Hide-Stable/releases)** page.
+2.  **Move to Applications**: Unzip and drag `Click2Hide.app` into your `/Applications` folder.
+3.  **Bypass Gatekeeper**: 
+    -   Because this is an independent open-source build, macOS may say "Developer cannot be verified." 
+    -   To open: **Right-Click** the app in Finder and choose **Open**, then click **Open** again in the dialog. Or go to **System Settings > Privacy & Security** and click **Open Anyway**.
+4.  **Grant Permissions**: 
+    -   Go to **System Settings > Privacy & Security > Accessibility**.
+    -   Enable **Click2Hide**. If it's already there but not working, remove it with the `-` button and add it again with `+`.
 
 ## Usage
 
-*   **Hide Applications**: Click the icon of the application that is currently frontmost.
-*   **Show Applications**: Click any background or minimized icon. The native Dock will bring it forward.
+-   **Hide Active App**: Click the Dock icon of the app you are currently using. It will minimize with your selected macOS animation.
+-   **Show/Recovery**: Click any other icon. Click2Hide steps aside and lets the macOS Dock handle the activation perfectly.
 
-## Credits & License
+---
+**Developed by Ranjan Ram Pratap**  
+Explore more projects at [theranjana.com](https://theranjana.com)
 
-This project is a stable fork of the original work by **Victor Won**. 
-Original Repository: [github.com/victorwon/click2hide](https://github.com/victorwon/click2hide)
-
-Licensed under the **MIT License**. See `LICENSE` for details.
+---
+*Original Base by Victor Won. Licensed under the MIT License.*
