@@ -192,16 +192,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             matched.appID.contains($0.localizedName ?? "___") == true
         }) {
             if app.isActive && !app.isHidden {
-                // IT IS ACTIVE -> MINIMIZE ITS WINDOWS
-                appDelegate.log("Minimizing: \(matched.appID)")
-                appDelegate.minimizeAppWindows(app: app)
-                return nil // Intercept the click
+                // IT IS ACTIVE. Check if it has visible windows.
+                if appDelegate.hasVisibleWindows(app: app) {
+                    // HAS VISIBLE WINDOWS -> MINIMIZE THEM
+                    appDelegate.log("Minimizing: \(matched.appID)")
+                    appDelegate.minimizeAppWindows(app: app)
+                    return nil // Intercept the click
+                } else {
+                    // NO VISIBLE WINDOWS (Already minimized) -> LET DOCK UNMINIMIZE
+                    appDelegate.log("Already minimized: \(matched.appID) -> Passing to OS")
+                    return Unmanaged.passUnretained(event)
+                }
             }
         }
         
         // IN ALL OTHER CASES: Let the macOS Dock handle the click
         // This is 100% reliable for opening/unminimizing apps
         return Unmanaged.passUnretained(event)
+    }
+
+    private func hasVisibleWindows(app: NSRunningApplication) -> Bool {
+        let appElement = AXUIElementCreateApplication(app.processIdentifier)
+        var windowsRef: CFTypeRef?
+        let result = AXUIElementCopyAttributeValue(appElement, kAXWindowsAttribute as CFString, &windowsRef)
+        
+        if result == .success, let windows = windowsRef as? [AXUIElement] {
+            for window in windows {
+                var minimizedRef: CFTypeRef?
+                AXUIElementCopyAttributeValue(window, kAXMinimizedAttribute as CFString, &minimizedRef)
+                let isMinimized = (minimizedRef as? Bool) ?? false
+                if !isMinimized {
+                    return true // Found at least one window that is NOT minimized
+                }
+            }
+        }
+        return false // All windows are minimized (or no windows found)
     }
 
     private func minimizeAppWindows(app: NSRunningApplication) {
